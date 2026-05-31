@@ -1,0 +1,17 @@
+---
+title: "Europe League Football Player 2025-2026 Analysis"
+format: html
+---
+
+```{r}
+library(tidyverse)
+
+```
+
+```{r}
+df <- read.csv("players_data_light-2025_2026.csv")
+```
+
+```{r}
+head(df)
+```
