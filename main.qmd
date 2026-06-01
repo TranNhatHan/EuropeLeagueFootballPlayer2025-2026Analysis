@@ -4,8 +4,9 @@ format: html
 ---
 
 ```{r}
+#| warning: false 
 library(tidyverse)
-
+library(scales)
 ```
 
 ```{r}
@@ -14,4 +15,85 @@ df <- read.csv("players_data_light-2025_2026.csv")
 
 ```{r}
 head(df)
+```
+
+```{r}
+summary(df)
+```
+
+```{r}
+glimpse(df)
+```
+
+```{r}
+gk_df <- df |>
+  filter(Pos == "GK")
+
+outfield_df <- df |>
+  filter(Pos != "GK" | is.na(Pos))
+```
+
+```{r}
+head(gk_df)
+```
+
+```{r}
+mean(df$Age, na.rm = TRUE)
+```
+
+```{r}
+df <- df |>
+  mutate(
+    Nation = sub("^[^ ]+ ", "", Nation),
+    Comp = sub("^[^ ]+ ", "", Comp)
+  )
+```
+
+```{r}
+df <- df |>
+  separate(
+    Pos,
+    into = c("PrimaryPos", "SecondaryPos"),
+    sep = ",",
+    fill = "right"
+  )
+```
+
+```{r}
+head(df)
+```
+
+```{r}
+df |>
+  count(PrimaryPos) |>
+  mutate(prop = n / sum(n),
+         label = label_percent()(prop)) |>
+  ggplot(aes(x = "", y = prop, fill = PrimaryPos)) +
+  
+  geom_col(width = 1, color = "white") +
+  
+  geom_text(aes(label = label),
+            position = position_stack(vjust = 0.5),
+            size = 3.5,
+            color = "black",
+            fontface = "bold") +
+  
+  coord_polar(theta = "y") +
+  
+  scale_color_manual("colourblind") +
+  
+  labs(
+    title = "Positional Distribution of Players",
+    subtitle = "Relative proportion of each playing position during the 2025–2026 season",
+    fill = "Playing Position"
+  ) +
+  
+  theme_void() +
+  
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    legend.title = element_text(face = "bold"),
+    legend.position = "right"
+  )
 ```
