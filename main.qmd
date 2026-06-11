@@ -26,14 +26,6 @@ glimpse(df)
 ```
 
 ```{r}
-gk_df <- df |>
-  filter(Pos == "GK")
-
-outfield_df <- df |>
-  filter(Pos != "GK" | is.na(Pos))
-```
-
-```{r}
 head(gk_df)
 ```
 
